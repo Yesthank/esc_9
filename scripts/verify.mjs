@@ -171,11 +171,19 @@ try {
 
     for (const h of room.hotspots) {
       if (h.action.type === 'examine') {
+        // 단계 노출(visibleWhen) — 아직 안 드러난 단서는 DOM 에 없다. 건너뛴다(완주엔 무관, 수첩 기록은
+        // 그 단서가 속한 퍼즐 단계에서 자연히 노출될 때 찍힌다).
+        const present = await page.$(`button[aria-label="${h.label}"]`)
+        if (!present) { console.log(`  ·· hidden (staged): ${h.label}`); continue }
         shot += 1
         await openAndShoot(h.label, `${String(shot + 10)}-${room.id}-${h.id}.png`)
         console.log(`  📷 examine: ${h.label}`)
       } else if (h.action.type === 'puzzle') {
         const pz = answers[h.action.puzzleId]
+        // 자물쇠도 단계 노출 — 직전 퍼즐을 풀어야 드러난다. 아직 없으면 건너뛴다(다음 패스 없음 —
+        // config 순서가 단계 순서와 일치하므로 이 시점엔 보여야 정상. 안 보이면 게이팅 회귀).
+        const lockBtn = await page.$(`button[aria-label="${h.label}"]`)
+        if (!lockBtn) { console.error(`  ✗ lock hidden at its turn: ${h.label}`); failed = true; continue }
         await page.click(`button[aria-label="${h.label}"]`)
         await page.waitForSelector('.modal--lock', { timeout: 8000 })
         if (!hintTested && resumeTested) { hintTested = true; await testHints() }
