@@ -382,25 +382,30 @@ body {
 .kslate__key:active { transform: translateY(1px); }
 .kslate__submit { width: 100%; border-radius: 10px; }
 
-/* ---------- 토글 자물쇠 (esc_9 L9 — 1~8 번호 버튼, 순서 무관) ---------- */
+/* ---------- 토글 자물쇠 (esc_9 L9 — 답안지 카드 4행 2열, 순서 무관) ---------- */
 .toggle { display: flex; flex-direction: column; gap: 14px; align-items: center; }
-.toggle__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; width: 100%; }
-.toggle__btn {
-  min-height: 48px; border-radius: 10px; cursor: pointer;
-  background: var(--hull-lt); color: var(--bone-dim); border: 1.5px solid var(--brass-dim);
-  font-family: var(--serif-ko); font-size: 20px; font-weight: 700; transition: .15s;
-  position: relative;
+.toggle__cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; width: 100%; }
+.toggle__card {
+  position: relative; padding: 0; border-radius: 8px; cursor: pointer; overflow: hidden;
+  background: transparent; border: 2px solid var(--brass-dim); transition: .15s;
+  line-height: 0;
 }
-.toggle__btn:hover { border-color: var(--brass); }
-.toggle__btn:active { transform: translateY(1px); }
-.toggle__btn.on {
-  background: linear-gradient(180deg, var(--brass), var(--brass-dim));
-  color: #1a130a; border-color: var(--brass);
-  box-shadow: inset 0 2px 6px rgba(0,0,0,.4), 0 0 10px rgba(201,118,43,.35);
+.toggle__card:hover { border-color: var(--brass); }
+.toggle__card:active { transform: translateY(1px); }
+.toggle__cardsvg { width: 100%; height: auto; display: block; }
+.toggle__check {
+  position: absolute; right: 4px; bottom: 3px; font-size: 15px; line-height: 1;
+  color: var(--glow); opacity: 0; transform: scale(.6); transition: .15s;
+  text-shadow: 0 1px 3px rgba(0,0,0,.6);
 }
-.toggle__btn.on::after {
-  content: ''; position: absolute; right: 5px; top: 4px; width: 6px; height: 6px;
-  border-radius: 50%; background: #1a130a; opacity: .55;
+.toggle__card.on {
+  border-color: var(--brass);
+  box-shadow: inset 0 0 0 2px var(--brass), 0 0 12px rgba(201,118,43,.45);
+}
+.toggle__card.on .toggle__cardsvg { filter: brightness(1.06); }
+.toggle__card.on .toggle__check { opacity: 1; transform: scale(1); }
+.toggle__card.on::before {
+  content: ''; position: absolute; inset: 0; background: rgba(201,118,43,.16); pointer-events: none;
 }
 .toggle__submit { width: 100%; border-radius: 10px; }
 

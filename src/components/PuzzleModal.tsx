@@ -32,7 +32,7 @@ export function PuzzleModal({
         {puzzle.type === 'keypad' ? (
           <DialLock answer={puzzle.answer} digits={puzzle.digits} onSolve={onSolve} />
         ) : puzzle.type === 'toggle' ? (
-          <ToggleLock count={puzzle.count} answer={puzzle.answer} onSolve={onSolve} />
+          <ToggleLock count={puzzle.count} answer={puzzle.answer} cells={puzzle.cells} onSolve={onSolve} />
         ) : /[가-힣]/.test(puzzle.answer) ? (
           <KoreanSlate
             puzzleId={puzzle.id}
@@ -125,12 +125,71 @@ function DialLock({ answer, digits, onSolve }: { answer: string; digits: number;
   )
 }
 
-// ───────────────────── 토글 자물쇠 (esc_9 L9 — 1~count 버튼, 순서 무관 부분집합) ─────────────────────
-// 답안지 여덟 장 중 '제 손으로 친 진짜'를 모두 누른다. 누르면 들어가고(선택), 다시 누르면 나온다(해제).
-// 선택 집합을 오름차순 정렬해 answer 와 비교. data-toggle="N" (headless verify 계약).
-function ToggleLock({ count, answer, onSolve }: { count: number; answer: string; onSolve: () => void }) {
+// ───────────────────── 토글 자물쇠 (esc_9 L9 — 답안지 카드, 순서 무관 부분집합) ─────────────────────
+// 답안지 여덟 장 중 '제 손으로 친 진짜'(자국 없음 ∧ 'ㅅ' 버릇 일치)를 모두 누른다.
+// 누르면 들어가고(선택), 다시 누르면 나온다(해제). 선택 집합을 오름차순 정렬해 answer 와 비교.
+// 카드 = 답안지 미니어처(번호·이름·지운 자국·필적). data-toggle="N" (headless verify 계약).
+interface ToggleCellData { n: number; name?: string; erase?: boolean; habit?: boolean }
+
+/** 답안지 미니 카드 — 번호 + 「엄석대」 + 자국 번짐 + 'ㅅ' 첫 획(길다/짧다). */
+function SheetCard({ cell, active, onClick }: { cell: ToggleCellData; active: boolean; onClick: () => void }) {
+  return (
+    <button
+      className={`toggle__card${active ? ' on' : ''}`}
+      data-toggle={cell.n}
+      aria-pressed={active}
+      aria-label={`답안지 ${cell.n}`}
+      onClick={onClick}
+    >
+      <svg viewBox="0 0 86 56" className="toggle__cardsvg" aria-hidden="true">
+        <rect x="1" y="1" width="84" height="54" rx="3" fill="#efe6d0" stroke="#c4b890" strokeWidth="1" />
+        {/* 번호 동그라미 */}
+        <circle cx="11" cy="11" r="7" fill="#2e4e3e" />
+        <text x="11" y="14.5" textAnchor="middle" fontSize="9" fontWeight="700" fill="#efe6d0">{cell.n}</text>
+        {/* 이름 칸 */}
+        <rect x="22" y="6" width="58" height="22" rx="2" fill="#f4eedd" stroke="#d0c0a0" strokeWidth="0.6" />
+        {/* 지운 자국 — 이름 밑 거뭇한 번짐 */}
+        {cell.erase && (
+          <>
+            <rect x="26" y="18" width="50" height="7" rx="2" fill="#8a7860" opacity="0.42" />
+            <rect x="31" y="20" width="34" height="4" rx="2" fill="#6a5a48" opacity="0.35" />
+          </>
+        )}
+        {/* 이름 「엄석대」 — 'ㅅ'(석) 첫 획 habit 이면 길게 */}
+        <text x="50" y="19" textAnchor="middle" fontSize="11" fontFamily="serif" fontWeight="700" fill="#1c2218">{cell.name ?? '엄석대'}</text>
+        {/* 필적 확대경 — 'ㅅ' 첫 획 */}
+        <circle cx="69" cy="42" r="8.5" fill="#fbf4df" stroke="#9a8870" strokeWidth="1" />
+        <g stroke="#1c2218" strokeWidth="1.9" strokeLinecap="round" fill="none">
+          {cell.habit ? (
+            <>
+              <line x1="62.5" y1="47.5" x2="71.5" y2="36.5" />
+              <line x1="71.5" y1="36.5" x2="75" y2="46" />
+            </>
+          ) : (
+            <>
+              <line x1="66" y1="46" x2="69.5" y2="37.5" />
+              <line x1="69.5" y1="37.5" x2="73" y2="46" />
+            </>
+          )}
+        </g>
+        {/* 점수 칸 — 잉크 얼룩(가림) */}
+        <rect x="6" y="34" width="40" height="14" rx="2" fill="#6a5a40" opacity="0.55" />
+        <ellipse cx="20" cy="41" rx="11" ry="5" fill="#4a3a28" opacity="0.5" />
+      </svg>
+      <span className="toggle__check" aria-hidden="true">✓</span>
+    </button>
+  )
+}
+
+function ToggleLock({
+  count, answer, cells, onSolve,
+}: { count: number; answer: string; cells?: ToggleCellData[]; onSolve: () => void }) {
   const [on, setOn] = useState<Set<number>>(new Set())
   const [shake, setShake] = useState(false)
+  const list: ToggleCellData[] = useMemo(
+    () => cells && cells.length ? cells : Array.from({ length: count }, (_, i) => ({ n: i + 1 })),
+    [cells, count],
+  )
   const toggle = (n: number) =>
     setOn((s) => {
       const next = new Set(s)
@@ -145,22 +204,10 @@ function ToggleLock({ count, answer, onSolve }: { count: number; answer: string;
   }
   return (
     <div className="toggle">
-      <div className={`toggle__grid${shake ? ' shake' : ''}`}>
-        {Array.from({ length: count }).map((_, i) => {
-          const n = i + 1
-          const active = on.has(n)
-          return (
-            <button
-              key={n}
-              className={`toggle__btn${active ? ' on' : ''}`}
-              data-toggle={n}
-              aria-pressed={active}
-              onClick={() => toggle(n)}
-            >
-              {n}
-            </button>
-          )
-        })}
+      <div className={`toggle__cards${shake ? ' shake' : ''}`}>
+        {list.map((c) => (
+          <SheetCard key={c.n} cell={c} active={on.has(c.n)} onClick={() => toggle(c.n)} />
+        ))}
       </div>
       <button className="btn btn--primary toggle__submit" onClick={submit}>걸쇠를 채운다</button>
     </div>

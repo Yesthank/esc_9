@@ -80,13 +80,23 @@ export interface TextInputPuzzle extends PuzzleBase {
   isKorean?: boolean
 }
 
-/** (esc_9 L9) 토글 자물쇠 — 1~count 버튼을 누르면 들어가고 다시 누르면 나온다.
- *  순서 무관. 선택 집합을 오름차순 정렬한 문자열이 answer 와 일치하면 해정. */
+/** 토글 카드 한 장 — 답안지 미니어처(번호 + 지운 자국 + 필적 버릇). */
+export interface ToggleCell {
+  n: number          // 번호(1~count)
+  name?: string      // 이름 칸 글자(예: '엄석대')
+  erase?: boolean    // 이름 밑 지우개 번짐(대리 시험)
+  habit?: boolean    // 'ㅅ' 첫 획을 길게 빼는 버릇(학급일지와 일치)
+}
+
+/** (esc_9 L9) 토글 자물쇠 — count 칸을 누르면 들어가고 다시 누르면 나온다.
+ *  순서 무관. 선택 집합을 오름차순 정렬한 문자열이 answer 와 일치하면 해정.
+ *  cells 가 있으면 답안지 그림 카드로 렌더(없으면 단순 번호 버튼). */
 export interface TogglePuzzle extends PuzzleBase {
   type: 'toggle'
   count: number
   answer: string // 정답 번호를 오름차순 이어 붙인 문자열 (예: '146')
   prompt?: string
+  cells?: ToggleCell[]
 }
 
 export type Puzzle = KeypadPuzzle | TextInputPuzzle | TogglePuzzle

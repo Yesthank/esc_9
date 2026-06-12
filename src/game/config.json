@@ -1006,6 +1006,56 @@
       "count": 8,
       "answer": "146",
       "prompt": "자국 없고 버릇 같은 진짜 과목을 모두 눌러라",
+      "cells": [
+        {
+          "n": 1,
+          "name": "엄석대",
+          "erase": false,
+          "habit": true
+        },
+        {
+          "n": 2,
+          "name": "엄석대",
+          "erase": true,
+          "habit": true
+        },
+        {
+          "n": 3,
+          "name": "엄석대",
+          "erase": true,
+          "habit": false
+        },
+        {
+          "n": 4,
+          "name": "엄석대",
+          "erase": false,
+          "habit": true
+        },
+        {
+          "n": 5,
+          "name": "엄석대",
+          "erase": true,
+          "habit": false
+        },
+        {
+          "n": 6,
+          "name": "엄석대",
+          "erase": false,
+          "habit": true
+        },
+        {
+          "n": 7,
+          "name": "엄석대",
+          "erase": false,
+          "habit": false
+        },
+        {
+          "n": 8,
+          "name": "엄석대",
+          "erase": true,
+          "habit": false
+        }
+      ],
       "reward": {
         "type": "flag",
         "flagId": "th-exam-solved",
