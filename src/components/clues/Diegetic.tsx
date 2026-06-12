@@ -107,7 +107,10 @@ function Staff({ clue }: { clue: TokensClue }) {
       {[80, 70, 60, 50, 40].map((y, li) => (
         <line key={li} x1="10" y1={y} x2="112" y2={y} stroke={INK} strokeWidth="0.9" />
       ))}
-      {/* 맨 아랫줄(도) 살짝 도톰 — 앵커 암시(숫자·글자 비표기 계약) */}
+      {/* 높은음자리표 — 트레블 클레프 암시(맨 아랫줄=미). 단순 G-clef 곡선 */}
+      <path d="M16 78 q-5 -3 -5 -9 q0 -7 6 -7 q5 0 5 6 q0 9 -9 13 q-5 2 -5 -2"
+        fill="none" stroke={INK} strokeWidth="1.3" strokeLinecap="round" opacity="0.85" />
+      {/* 맨 아랫줄(미) 살짝 도톰 — 기준선(숫자·계이름 비표기 계약, 괘도가 대응을 준다) */}
       <line x1="10" y1="80" x2="112" y2="80" stroke={INK} strokeWidth="1.4" />
       {/* 음표 — 콩나물: 머리(타원) + 기둥(세로선). 순서는 왼→오른 */}
       {clue.tokens.map((t, i) => {
@@ -133,31 +136,42 @@ function Staff({ clue }: { clue: TokensClue }) {
 }
 
 /** 풍금 건반: 흰 건반 7개 + 검은 건반, 첫 건반(도)에 빨간 단추. */
-function Keys({ clue: _clue }: { clue: TokensClue }) {
-  // 흰 건반 7개, 검은 건반 배치(도레미파솔라시 기준)
+function Keys({ clue }: { clue: TokensClue }) {
+  // 흰 건반 7개(도레미파솔라시), 각 건반에 계이름 + 번호(도1 레2 미3 …) — 괘도 대응.
   const wW = 14, wH = 64
   const bW = 9, bH = 38
-  // 검은 건반 위치: 도#(0.5), 레#(1.5), 파#(3.5), 솔#(4.5), 라#(5.5)
+  // 검은 건반 위치: 도#·레#(0.65,1.65), 파#·솔#·라#(3.65,4.65,5.65)
   const blackOffsets = [0.65, 1.65, 3.65, 4.65, 5.65]
+  const labels = clue.tokens.length >= 7
+    ? clue.tokens
+    : ['도', '레', '미', '파', '솔', '라', '시'].map((n, i) => ({ text: n, tag: String(i + 1) }))
   return (
-    <Scene vb="0 0 120 96">
+    <Scene vb="0 0 120 102">
       {/* 풍금 몸체 */}
-      <rect x="4" y="16" width="112" height="76" rx="4" fill={MARU} stroke="#5a4030" strokeWidth="1.2" />
+      <rect x="4" y="14" width="112" height="84" rx="4" fill={MARU} stroke="#5a4030" strokeWidth="1.2" />
       {/* 흰 건반 7개 */}
       {Array.from({ length: 7 }).map((_, i) => {
         const x = 8 + i * wW
         return (
-          <rect key={i} x={x} y="22" width={wW - 1} height={wH}
+          <rect key={i} x={x} y="20" width={wW - 1} height={wH}
             rx="2" fill={HANJI} stroke="#c0b090" strokeWidth="0.8" />
         )
       })}
       {/* 검은 건반 */}
       {blackOffsets.map((off, i) => (
-        <rect key={i} x={8 + off * wW} y="22" width={bW} height={bH}
+        <rect key={i} x={8 + off * wW} y="20" width={bW} height={bH}
           rx="1.5" fill={INK} />
       ))}
-      {/* 첫째 건반(도) — 빨간 단추 */}
-      <circle cx={8 + wW / 2} cy={22 + wH - 10} r="4.5" fill={RED} stroke="#7a1a0a" strokeWidth="1" />
+      {/* 흰 건반 아래에 계이름 + 번호 */}
+      {labels.slice(0, 7).map((t, i) => {
+        const cx = 8 + i * wW + wW / 2 - 0.5
+        return (
+          <g key={i}>
+            <text x={cx} y={20 + wH - 14} textAnchor="middle" fontSize="8" fontFamily="serif" fill={INK}>{t.text}</text>
+            <text x={cx} y={20 + wH - 4} textAnchor="middle" fontSize="9" fontWeight="700" fill={RED}>{t.tag}</text>
+          </g>
+        )
+      })}
     </Scene>
   )
 }
@@ -190,46 +204,49 @@ function Diary({ clue }: { clue: TokensClue }) {
   )
 }
 
-/** 양동이 줄: 우물(좌상)에서 지그재그로 양동이 4개. text=표찰 번호, tag=걸음수. */
+/** 양동이 줄: 우물에서 각 양동이로 점선 — 점선 길이(우물 거리) = 걸음수.
+ *  화면 세로 위치는 거리순과 섞여(지그재그), "위에서 아래로 읽기" 미끼와 "우물 가까운 순"(정답)을 분리한다. */
 function Buckets({ clue }: { clue: TokensClue }) {
-  // 양동이 위치 — 우물에서 지그재그
-  const positions: [number, number][] = [
-    [22, 30], [60, 55], [26, 80], [70, 105],
-  ]
+  // "열두 걸음" → 12. 한글 수사 파싱.
+  const KO: Record<string, number> = {
+    한: 1, 두: 2, 세: 3, 네: 4, 다섯: 5, 여섯: 6, 일곱: 7, 여덟: 8, 아홉: 9,
+    열: 10, 열한: 11, 열두: 12, 열셋: 13, 열넷: 14,
+  }
+  const steps = (tag?: string) => KO[(tag ?? '').replace(/\s*걸음\s*/g, '').trim()] ?? 99
+  // 우물에서 가까운→먼 자리(거리 오름차순). y는 비단조(36·80·54·108)라 거리순≠세로순.
+  const slots: [number, number][] = [[40, 36], [24, 80], [82, 54], [84, 108]]
+  const WELL: [number, number] = [18, 26]
+  // 토큰을 걸음수 오름차순 → 가까운 자리부터(걸음 적은 양동이가 우물에 가깝게).
+  const ordered = clue.tokens.map((t) => ({ t, s: steps(t.tag) })).sort((a, b) => a.s - b.s)
   return (
     <Scene vb="0 0 110 140">
       <rect x="0" y="0" width="110" height="140" rx="3" fill="#e8f0e4" />
       {/* 우물 */}
-      <rect x="4" y="4" width="26" height="22" rx="2" fill={MARU} stroke="#5a3a18" strokeWidth="1.2" />
-      <ellipse cx="17" cy="8" rx="10" ry="4" fill="#8a6a48" stroke="#5a3a18" strokeWidth="1" />
-      <text x="17" y="22" textAnchor="middle" fontSize="8" fontFamily="serif" fill={HANJI}>우물</text>
-      {/* 우물~첫 양동이 점선 */}
-      <line x1="17" y1="26" x2={positions[0]![0]} y2={positions[0]![1] - 12}
-        stroke={MARU} strokeWidth="1" strokeDasharray="3 3" />
-      {/* 양동이 사이 점선 */}
-      {positions.slice(0, -1).map((p, i) => {
-        const q = positions[i + 1]!
+      <rect x="5" y="6" width="26" height="20" rx="2" fill={MARU} stroke="#5a3a18" strokeWidth="1.2" />
+      <ellipse cx="18" cy="10" rx="10" ry="4" fill="#3a5a68" stroke="#5a3a18" strokeWidth="1" />
+      <text x="18" y="22" textAnchor="middle" fontSize="7" fontFamily="serif" fill={HANJI}>우물</text>
+      {/* 우물 → 각 양동이 개별 점선 — 길이가 곧 걸음수(거리) */}
+      {ordered.map((_, k) => {
+        const [cx, cy] = slots[k]!
         return (
-          <line key={i} x1={p[0]} y1={p[1] + 12} x2={q[0]} y2={q[1] - 12}
-            stroke={MARU} strokeWidth="1" strokeDasharray="3 3" />
+          <line key={`l${k}`} x1={WELL[0]} y1={WELL[1]} x2={cx} y2={cy - 11}
+            stroke="#7a9088" strokeWidth="1" strokeDasharray="3 3" />
         )
       })}
       {/* 양동이 4개 */}
-      {clue.tokens.map((t, i) => {
-        const pos = positions[i % positions.length]!
-        const [cx, cy] = pos
+      {ordered.map(({ t }, k) => {
+        const [cx, cy] = slots[k]!
         return (
-          <g key={i}>
+          <g key={k}>
             {/* 양동이 몸체(사다리꼴) */}
             <path d={`M${cx - 9} ${cy - 10} L${cx + 9} ${cy - 10} L${cx + 7} ${cy + 10} L${cx - 7} ${cy + 10} Z`}
               fill="#6090a8" stroke="#3a6070" strokeWidth="1.2" />
-            {/* 손잡이 */}
-            <path d={`M${cx - 7} ${cy - 10} Q${cx} ${cy - 20} ${cx + 7} ${cy - 10}`}
+            <path d={`M${cx - 7} ${cy - 10} Q${cx} ${cy - 19} ${cx + 7} ${cy - 10}`}
               fill="none" stroke="#3a6070" strokeWidth="1.2" />
             {/* 표찰 번호 */}
             <text x={cx} y={cy + 3} textAnchor="middle" fontSize="10" fontFamily="serif" fontWeight="700" fill={HANJI}>{t.text}</text>
-            {/* 발치 걸음수 */}
-            <text x={cx} y={cy + 22} textAnchor="middle" fontSize="7" fill="#4a6070">{t.tag}</text>
+            {/* 발치 걸음수 라벨 */}
+            <text x={cx} y={cy + 21} textAnchor="middle" fontSize="7" fill="#3a5060">{t.tag}</text>
           </g>
         )
       })}
@@ -481,46 +498,38 @@ function Ballots({ clue }: { clue: TokensClue }) {
   )
 }
 
-/** 完成 正 한 글자 SVG — 다섯 획을 모두 완전히 그림. */
-function FullJeong({ x, y, size, color }: { x: number; y: number; size: number; color: string }) {
-  const s = size / 28
+/** 完成 tally 한 묶음 — 막대 4개 + 사선(||||＼), 다섯을 묶는 서양식 작대기 셈. */
+function FullTally({ x, y, size, color }: { x: number; y: number; size: number; color: string }) {
+  const s = size / 24
   return (
-    <g transform={`translate(${x} ${y}) scale(${s})`} stroke={color} strokeWidth="3.2" strokeLinecap="round" fill="none">
-      {/* 正 획순: 1=맨 위 가로, 2=세로, 3=중간 짧은 가로, 4=왼 세로, 5=맨 아래 가로 */}
-      <line x1="-11" y1="-12" x2="11" y2="-12" />   {/* 1 — 맨 위 가로 */}
-      <line x1="0" y1="-12" x2="0" y2="2" />          {/* 2 — 중심 세로 */}
-      <line x1="-8" y1="-3" x2="8" y2="-3" />         {/* 3 — 중간 짧은 가로 */}
-      <line x1="-8" y1="-3" x2="-8" y2="12" />        {/* 4 — 왼 세로 */}
-      <line x1="-11" y1="12" x2="11" y2="12" />       {/* 5 — 맨 아래 가로 */}
+    <g transform={`translate(${x} ${y}) scale(${s})`} stroke={color} strokeWidth="2.6" strokeLinecap="round" fill="none">
+      {[0, 1, 2, 3].map((i) => (
+        <line key={i} x1={-9 + i * 5} y1="-11" x2={-9 + i * 5} y2="11" />
+      ))}
+      {/* 다섯째 — 사선으로 네 막대를 묶는다(왼아래→오른위) */}
+      <line x1="-13" y1="11" x2="10" y2="-11" />
     </g>
   )
 }
 
-/** 미완성 正 — 획순 1~n 획만 그림(n=1~4). */
-function PartialJeong({ x, y, size, color, strokes }: {
+/** 미완성 tally — 막대 n개만(n=1~4), 아직 사선이 없다(다섯 미만). */
+function PartialTally({ x, y, size, color, strokes }: {
   x: number; y: number; size: number; color: string; strokes: number
 }) {
-  const s = size / 28
-  // 획 정의: [x1, y1, x2, y2]
-  const lines: [number, number, number, number][] = [
-    [-11, -12, 11, -12],   // 1
-    [0, -12, 0, 2],         // 2
-    [-8, -3, 8, -3],        // 3
-    [-8, -3, -8, 12],       // 4
-  ]
+  const s = size / 24
   return (
-    <g transform={`translate(${x} ${y}) scale(${s})`} stroke={color} strokeWidth="3.2" strokeLinecap="round" fill="none">
-      {lines.slice(0, strokes).map((l, i) => (
-        <line key={i} x1={l[0]} y1={l[1]} x2={l[2]} y2={l[3]} />
+    <g transform={`translate(${x} ${y}) scale(${s})`} stroke={color} strokeWidth="2.6" strokeLinecap="round" fill="none">
+      {Array.from({ length: Math.max(0, Math.min(4, strokes)) }).map((_, i) => (
+        <line key={i} x1={-9 + i * 5} y1="-11" x2={-9 + i * 5} y2="11" />
       ))}
     </g>
   )
 }
 
-/** 개표 칠판 — 위 클러스터(이름 패 겹침 사슬 = 순서축) + 아래 표(칸 차례 그대로 = 값축).
+/** 개표 칠판 — 위 '개표 차례' 띠(순서축, 명확화) + 아래 표(칸 차례 그대로 = 값축).
  *  칸은 **원래 차례**로 그린다(겹침 순으로 줄 세우면 직독=정답 누설 — 설계서 v2 L8).
- *  겹침은 물리 페인터 알고리즘: 먼저 쓴(pos 작은) 패가 아래 깔리고, 나중 패의 불투명 면이
- *  깔린 패의 분필 테두리를 끊는다 — "덧쓴 쪽이 위다". */
+ *  순서축은 좌→우 대각 계단 + 명도 단계 + 겹침으로 "먼저 → 나중"을 한눈에 읽히게 한다.
+ *  값축은 서양식 작대기 셈: 完成 묶음(||||＼)은 다섯, 끝의 미완성 막대 수(1~4)가 답. */
 function Tallyboard({ clue }: { clue: TokensClue }) {
   const items = clue.tokens.map((t, i) => {
     const tagParts = (t.tag ?? '').split(' · ')
@@ -532,57 +541,56 @@ function Tallyboard({ clue }: { clue: TokensClue }) {
       pos: (t as { pos?: number }).pos ?? i + 1,
     }
   })
-  // 이름 패 클러스터 배치 — 겹침이 정확히 사슬 3쌍만 생기게(인접쌍: pos1-2, 2-3, 3-4).
-  // 칸 차례(items 순서)와 무관하게 pos 로 자리를 정한다: 어디에 쓰였는지가 아니라
-  // "어느 패가 어느 패를 덮었는지"가 관측물이다.
-  const PAD_XY: Record<number, { x: number; y: number }> = {
-    1: { x: 5, y: 8 },   // 맨 먼저 — 맨 아래 깔림
-    2: { x: 49, y: 14 },
-    3: { x: 23, y: 27 },
-    4: { x: 67, y: 33 },
-  }
-  const PAD_W = 52, PAD_H = 17
-  const byPos = [...items].sort((a, b) => a.pos - b.pos)
+  const byPos = [...items].sort((a, b) => a.pos - b.pos) // pos 1=맨 먼저 적힘
+  const PAD_W = 40, PAD_H = 16
+  // 좌→우 대각 계단(먼저=왼아래·흐림 → 나중=오른위·선명). 인접 패끼리만 모서리 겹침.
+  const padX = (i: number) => 6 + i * 26
+  const padY = (i: number) => 40 - i * 9
 
   return (
-    <Scene vb="0 0 132 152">
+    <Scene vb="0 0 132 158">
       {/* 칠판 */}
-      <rect x="0" y="0" width="132" height="152" rx="4" fill={BOARD} />
-      {/* ── 위: 이름 패 클러스터 — 먼저 쓴 패부터 그리면 나중 패가 모서리를 덮는다 ── */}
-      {byPos.map((it) => {
-        const p = PAD_XY[it.pos] ?? { x: 5, y: 8 }
+      <rect x="0" y="0" width="132" height="158" rx="4" fill={BOARD} />
+      {/* ── 위: 개표 차례 띠 ── */}
+      <text x="6" y="9" fontSize="6.5" fill={HANJI} opacity="0.6">개표 차례</text>
+      {/* 먼저 → 나중 방향 화살표 */}
+      <g stroke={HANJI} strokeWidth="0.9" opacity="0.5" fill="none">
+        <line x1="20" y1="12" x2="118" y2="12" />
+        <path d="M118 12 l-4 -2 m4 2 l-4 2" />
+      </g>
+      <text x="20" y="9" fontSize="5.5" fill={HANJI} opacity="0.55">먼저</text>
+      <text x="118" y="9" textAnchor="end" fontSize="5.5" fill={HANJI} opacity="0.55">나중</text>
+      {/* 먼저 쓴 패부터 그리면 나중(오른위) 패가 모서리를 덮는다 — 겹침이 곧 차례 */}
+      {byPos.map((it, i) => {
+        const x = padX(i), y = padY(i)
+        const fade = 0.45 + i * 0.18 // 먼저=흐림 → 나중=선명
         return (
           <g key={it.pos}>
-            {/* 불투명 면 — 아래 깔린 패의 분필 테두리를 물리적으로 끊는다 */}
-            <rect x={p.x} y={p.y} width={PAD_W} height={PAD_H} rx="2.5" fill="#27433a" />
-            <rect x={p.x} y={p.y} width={PAD_W} height={PAD_H} rx="2.5"
-              fill="none" stroke={HANJI} strokeWidth="1.6" opacity="0.9" />
-            <text x={p.x + PAD_W / 2} y={p.y + 12} textAnchor="middle" fontSize="9"
-              fill={HANJI} opacity="0.95">{it.name}</text>
+            {/* 불투명 면 — 아래 깔린(먼저 쓴) 패의 분필을 덮어 끊는다 */}
+            <rect x={x} y={y} width={PAD_W} height={PAD_H} rx="2.5" fill="#243f37" opacity={fade} />
+            <rect x={x} y={y} width={PAD_W} height={PAD_H} rx="2.5"
+              fill="none" stroke={HANJI} strokeWidth="1.5" opacity={fade} />
+            <text x={x + PAD_W / 2} y={y + 11} textAnchor="middle" fontSize="8.5"
+              fill={HANJI} opacity={Math.min(1, fade + 0.2)}>{it.name}</text>
           </g>
         )
       })}
-      {/* ── 아래: 개표 표 — 칸 차례 그대로(값축). 한 칸 = 이름 + 完成 正들 + 미완성 ── */}
-      <line x1="6" y1="58" x2="126" y2="58" stroke={HANJI} strokeWidth="0.6" opacity="0.3" />
+      {/* ── 아래: 개표 표 — 칸 차례 그대로(값축). 한 칸 = 이름 + 完成 묶음들 + 미완성 ── */}
+      <line x1="6" y1="62" x2="126" y2="62" stroke={HANJI} strokeWidth="0.6" opacity="0.3" />
       {items.map((it, k) => {
         const x = 4 + k * 32
         const cx = x + 15
         return (
           <g key={k}>
-            <line x1={x + 31} y1="60" x2={x + 31} y2="146" stroke={HANJI} strokeWidth="0.5" opacity="0.2" />
-            <text x={cx} y="70" textAnchor="middle" fontSize="7.5" fill={HANJI} opacity="0.85">{it.name}</text>
-            {/* 完成 正 — 두 개씩 가로로 */}
-            {Array.from({ length: it.full }).map((_, ji) => {
-              const jx = cx + (ji % 2 === 0 ? -7 : 7)
-              const jy = 84 + Math.floor(ji / 2) * 18
-              return <FullJeong key={ji} x={jx} y={jy} size={13} color={HANJI} />
-            })}
-            {/* 미완성 正 — 마지막 묶음 다음 자리 */}
+            <line x1={x + 31} y1="64" x2={x + 31} y2="152" stroke={HANJI} strokeWidth="0.5" opacity="0.2" />
+            <text x={cx} y="74" textAnchor="middle" fontSize="7.5" fill={HANJI} opacity="0.85">{it.name}</text>
+            {/* 完成 묶음(||||＼ = 다섯) — 한 행에 하나씩 세로로 */}
+            {Array.from({ length: it.full }).map((_, ji) => (
+              <FullTally key={ji} x={cx} y={88 + ji * 17} size={15} color={HANJI} />
+            ))}
+            {/* 미완성 막대 — 마지막 묶음 다음 줄(붉게 강조 — '끝나지 않은 글자') */}
             {it.partial > 0 && (
-              <PartialJeong
-                x={cx + (it.full % 2 === 0 ? -7 : 7)}
-                y={84 + Math.floor(it.full / 2) * 18}
-                size={13} color={HANJI} strokes={it.partial} />
+              <PartialTally x={cx} y={88 + it.full * 17} size={15} color="#e0b070" strokes={it.partial} />
             )}
           </g>
         )
@@ -684,8 +692,9 @@ function Exams({ clue }: { clue: TokensClue }) {
                 </>
               )}
             </g>
-            {/* 장 번호 */}
-            <text x={x + 4} y={y + 37.5} fontSize="6" fill="#9a8870">{t.text}</text>
+            {/* 답안지 번호(1~8) — 토글 자물쇠가 누르는 번호. 좌상 모서리에 또렷이 */}
+            <circle cx={x + 7} cy={y + 7} r="6" fill={BOARD} stroke={HANJI} strokeWidth="0.8" />
+            <text x={x + 7} y={y + 9.5} textAnchor="middle" fontSize="8" fontWeight="700" fill={HANJI}>{t.text}</text>
           </g>
         )
       })}

@@ -100,7 +100,7 @@ export function ClearScreen({
       <div className="assemble" aria-hidden="true">
         <span className="assemble__token assemble__token--1">급장선거</span>
         <span className="assemble__token assemble__token--2">만장일치</span>
-        <span className="assemble__token assemble__token--3">7281</span>
+        <span className="assemble__token assemble__token--3">①④⑥</span>
       </div>
       <h2 className="assemble__drop">아니다</h2>
       <p className="screen__message">{config.clearMessage}</p>

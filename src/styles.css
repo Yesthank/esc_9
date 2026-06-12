@@ -382,6 +382,28 @@ body {
 .kslate__key:active { transform: translateY(1px); }
 .kslate__submit { width: 100%; border-radius: 10px; }
 
+/* ---------- 토글 자물쇠 (esc_9 L9 — 1~8 번호 버튼, 순서 무관) ---------- */
+.toggle { display: flex; flex-direction: column; gap: 14px; align-items: center; }
+.toggle__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; width: 100%; }
+.toggle__btn {
+  min-height: 48px; border-radius: 10px; cursor: pointer;
+  background: var(--hull-lt); color: var(--bone-dim); border: 1.5px solid var(--brass-dim);
+  font-family: var(--serif-ko); font-size: 20px; font-weight: 700; transition: .15s;
+  position: relative;
+}
+.toggle__btn:hover { border-color: var(--brass); }
+.toggle__btn:active { transform: translateY(1px); }
+.toggle__btn.on {
+  background: linear-gradient(180deg, var(--brass), var(--brass-dim));
+  color: #1a130a; border-color: var(--brass);
+  box-shadow: inset 0 2px 6px rgba(0,0,0,.4), 0 0 10px rgba(201,118,43,.35);
+}
+.toggle__btn.on::after {
+  content: ''; position: absolute; right: 5px; top: 4px; width: 6px; height: 6px;
+  border-radius: 50%; background: #1a130a; opacity: .55;
+}
+.toggle__submit { width: 100%; border-radius: 10px; }
+
 /* ---------- 수첩 ---------- */
 .journal { max-width: 396px; }
 .journal__empty { text-align: center; color: var(--bone-dim); font-size: 14px; line-height: 2; margin: 18px 0 22px; }

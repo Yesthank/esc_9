@@ -31,6 +31,8 @@ export function PuzzleModal({
         <p className="lock__hint">기록한 단서를 떠올려 자물쇠를 풀어라.</p>
         {puzzle.type === 'keypad' ? (
           <DialLock answer={puzzle.answer} digits={puzzle.digits} onSolve={onSolve} />
+        ) : puzzle.type === 'toggle' ? (
+          <ToggleLock count={puzzle.count} answer={puzzle.answer} onSolve={onSolve} />
         ) : /[가-힣]/.test(puzzle.answer) ? (
           <KoreanSlate
             puzzleId={puzzle.id}
@@ -119,6 +121,48 @@ function DialLock({ answer, digits, onSolve }: { answer: string; digits: number;
         ))}
       </div>
       <button className="btn btn--primary dial__lever" onClick={submit}>레버를 당긴다</button>
+    </div>
+  )
+}
+
+// ───────────────────── 토글 자물쇠 (esc_9 L9 — 1~count 버튼, 순서 무관 부분집합) ─────────────────────
+// 답안지 여덟 장 중 '제 손으로 친 진짜'를 모두 누른다. 누르면 들어가고(선택), 다시 누르면 나온다(해제).
+// 선택 집합을 오름차순 정렬해 answer 와 비교. data-toggle="N" (headless verify 계약).
+function ToggleLock({ count, answer, onSolve }: { count: number; answer: string; onSolve: () => void }) {
+  const [on, setOn] = useState<Set<number>>(new Set())
+  const [shake, setShake] = useState(false)
+  const toggle = (n: number) =>
+    setOn((s) => {
+      const next = new Set(s)
+      if (next.has(n)) next.delete(n)
+      else next.add(n)
+      return next
+    })
+  const submit = () => {
+    const picked = [...on].sort((a, b) => a - b).join('')
+    if (picked === answer) onSolve()
+    else { setShake(true); setTimeout(() => setShake(false), 480) }
+  }
+  return (
+    <div className="toggle">
+      <div className={`toggle__grid${shake ? ' shake' : ''}`}>
+        {Array.from({ length: count }).map((_, i) => {
+          const n = i + 1
+          const active = on.has(n)
+          return (
+            <button
+              key={n}
+              className={`toggle__btn${active ? ' on' : ''}`}
+              data-toggle={n}
+              aria-pressed={active}
+              onClick={() => toggle(n)}
+            >
+              {n}
+            </button>
+          )
+        })}
+      </div>
+      <button className="btn btn--primary toggle__submit" onClick={submit}>걸쇠를 채운다</button>
     </div>
   )
 }

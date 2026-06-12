@@ -111,6 +111,18 @@ try {
     await page.click('.dial__lever')
     await sleep(500)
   }
+  const solveToggle = async (answer) => {
+    // L9 토글 — 정답 번호(부분집합)를 순서 무관 클릭 → 제출.
+    await page.waitForSelector('.toggle__grid', { timeout: 8000 })
+    for (const ch of answer) {
+      const btn = await page.$(`.toggle__grid button[data-toggle="${ch}"]`)
+      if (!btn) { console.error(`  ✗ toggle button missing: ${ch}`); failed = true; return }
+      await btn.click()
+      await sleep(70)
+    }
+    await page.click('.toggle__submit')
+    await sleep(500)
+  }
   const solveText = async (answer) => {
     if (/[가-힣]/.test(answer)) {
       // 한글 정답 — 음절 후보 슬레이트: 정답 음절 순서로 data-syl 버튼 클릭 → 제출 버튼(Enter 의존 금지)
@@ -188,6 +200,7 @@ try {
         await page.waitForSelector('.modal--lock', { timeout: 8000 })
         if (!hintTested && resumeTested) { hintTested = true; await testHints() }
         if (pz.type === 'keypad') await solveDial(pz.answer)
+        else if (pz.type === 'toggle') await solveToggle(pz.answer)
         else await solveText(pz.answer)
         const still = await page.$('.modal--lock')
         if (still) { console.error(`  ✗ lock NOT solved: ${pz.id} (${pz.answer})`); failed = true; await page.click('.modal__close') }
@@ -205,7 +218,14 @@ try {
     }
   }
 
-  // 클리어 화면
+  // 에필로그(엄석대 몰락 3비트) 클릭스루 → 클리어 화면
+  for (let i = 0; i < 6; i++) {
+    const ep = await page.$('.inter--epilogue')
+    if (!ep) break
+    if (i === 0) { await sleep(450); await page.screenshot({ path: join(SHOTS, '90-epilogue.png') }) }
+    await page.click('.inter--epilogue').catch(() => {})
+    await sleep(480)
+  }
   await page.waitForSelector('.screen--clear', { timeout: 12000 })
   await sleep(3600) // 토큰 조립 + 호명(클리어) 연출
   await page.screenshot({ path: join(SHOTS, '99-clear.png') })

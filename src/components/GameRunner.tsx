@@ -12,6 +12,7 @@ import { PuzzleModal } from './PuzzleModal'
 import { ExamineModal } from './ExamineModal'
 import { DialogModal } from './DialogModal'
 import { Interstitial } from './Interstitial'
+import { Epilogue } from './Epilogue'
 import { TitleScreen, ClearScreen, FailScreen } from './Screens'
 import { Effects, useEffects } from './Effects'
 
@@ -31,6 +32,7 @@ export function GameRunner({ config, clueMap }: { config: GameConfig; clueMap: C
   const { state, room, facts, actions, visibleHotspots } = useGame(config)
   const [showJournal, setShowJournal] = useState(false)
   const [interTo, setInterTo] = useState<string | null>(null)
+  const [epilogueDone, setEpilogueDone] = useState(false)
   const { fx, fire, clear, stageClass } = useEffects()
 
   // 구획 앰비언트 — 낮 매미 / 저녁 바람 / 밤 귀뚜라미·유리 풍경(설계서 v2 §4-6).
@@ -64,7 +66,9 @@ export function GameRunner({ config, clueMap }: { config: GameConfig; clueMap: C
   }, [state.toast, actions])
 
   if (state.status === 'title') return <TitleScreen config={config} onStart={actions.start} onResume={actions.resume} />
-  if (state.status === 'cleared')
+  if (state.status === 'cleared') {
+    // 사이퍼 해정 후 — 엄석대 몰락 에필로그(3비트)를 먼저 보이고, 끝나면 클리어 화면.
+    if (!epilogueDone) return <Epilogue onDone={() => setEpilogueDone(true)} />
     return (
       <ClearScreen
         config={config}
@@ -73,6 +77,7 @@ export function GameRunner({ config, clueMap }: { config: GameConfig; clueMap: C
         onRestart={actions.restart}
       />
     )
+  }
   if (state.status === 'failed') return <FailScreen onRestart={actions.restart} />
   if (!room) return null
 

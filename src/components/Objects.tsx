@@ -42,7 +42,6 @@ const KIND_BY_LABEL: Record<string, Kind> = {
   '보면대의 악보':        'staffsheet',
   '벽의 음악 괘도':       'musicchart',
   '풍금 뚜껑':            'organlock',
-  '풍금 의자 밑 일기장':  'diary',
   '몰수품 상자':          'confiscated',
   '교실 뒷문':            'backgate',
   // R2 운동장
@@ -75,9 +74,9 @@ const KIND_BY_LABEL: Record<string, Kind> = {
   '학급일지':             'daybook',
   '깨진 유리창과 라이터': 'brokenwindow',
   '답안지 여덟 장':       'exams',
-  '검인 다이얼':          'dialdoor',
+  '답안지 자물쇠':        'dialdoor',
   '두고 간 일기장':       'leftdiary',
-  '등사 시 프린트':       'poemprint',
+  '칠판의 시':            'poemprint',
 }
 
 export const CLUE_KEY_BY_LABEL: Record<string, string> = {
@@ -86,7 +85,6 @@ export const CLUE_KEY_BY_LABEL: Record<string, string> = {
   '서랍의 알림장':        'th-notice',
   '보면대의 악보':        'th-staffsheet',
   '벽의 음악 괘도':       'th-anchor',
-  '풍금 의자 밑 일기장':  'th-diary',
   '몰수품 상자':          'th-confiscated',
   '도르래의 쪽지':        'th-well',
   '주번 일지':            'th-weeklog',

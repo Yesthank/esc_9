@@ -80,7 +80,16 @@ export interface TextInputPuzzle extends PuzzleBase {
   isKorean?: boolean
 }
 
-export type Puzzle = KeypadPuzzle | TextInputPuzzle
+/** (esc_9 L9) 토글 자물쇠 — 1~count 버튼을 누르면 들어가고 다시 누르면 나온다.
+ *  순서 무관. 선택 집합을 오름차순 정렬한 문자열이 answer 와 일치하면 해정. */
+export interface TogglePuzzle extends PuzzleBase {
+  type: 'toggle'
+  count: number
+  answer: string // 정답 번호를 오름차순 이어 붙인 문자열 (예: '146')
+  prompt?: string
+}
+
+export type Puzzle = KeypadPuzzle | TextInputPuzzle | TogglePuzzle
 
 export interface DialogLine {
   speaker?: string
