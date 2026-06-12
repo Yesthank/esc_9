@@ -1,0 +1,973 @@
+{
+  "id": "twistedhero",
+  "title": "만장일치",
+  "description": "이문열 『우리들의 일그러진 영웅』 오마주 — 비공식·비상업 팬 메이드, 원작 텍스트 미사용(전 문장 창작). 1960년 무렵 시골 국민학교, 급장의 질서가 잠근 교실. 한 해의 기억을 자물쇠 하나씩 풀고 — 마지막 자물쇠에는, 그날 삼킨 대답을 쓴다.",
+  "thumbnail": "/rooms/twistedhero-thumb.png",
+  "timeLimit": 3600,
+  "startRoom": "room-classroom",
+  "rooms": [
+    {
+      "id": "room-classroom",
+      "name": "교실 — 전학 첫날",
+      "background": "/rooms/bg-classroom.png",
+      "hotspots": [
+        {
+          "id": "room-classroom-h1",
+          "area": [
+            8,
+            10,
+            26,
+            12
+          ],
+          "label": "칠판 구석 내일 시간표",
+          "action": {
+            "type": "examine",
+            "text": "일직이 분필로 적어 둔 내일(화요일) 시간표 — 한 줄에 한 교시씩, 여섯 줄. 과목마다 꼭 한 번씩만 적혀 있다."
+          }
+        },
+        {
+          "id": "room-classroom-h2",
+          "area": [
+            64,
+            10,
+            26,
+            12
+          ],
+          "label": "유리창",
+          "action": {
+            "type": "examine",
+            "text": "닦아도 다시, 또 다시 — 내 손자국이 아직 남은 유리. 구령처럼 떨어지던 한 마디가 귓가에 맴돈다."
+          }
+        },
+        {
+          "id": "room-classroom-h3",
+          "area": [
+            10,
+            36,
+            28,
+            12
+          ],
+          "label": "서랍의 알림장",
+          "action": {
+            "type": "examine",
+            "text": "서랍 틈에 끼워 둔 알림장 — \"내일(화요일) 준비물: 산수 책 / 자연 채집통 / 음악 풍금 보표 / 국어 받아쓰기 공책.\" 네 줄, 줄 차례 그대로다."
+          }
+        },
+        {
+          "id": "room-classroom-h4",
+          "area": [
+            40,
+            38,
+            20,
+            13
+          ],
+          "label": "책상 서랍",
+          "action": {
+            "type": "puzzle",
+            "puzzleId": "th-timetable"
+          }
+        },
+        {
+          "id": "room-classroom-h5",
+          "area": [
+            66,
+            36,
+            24,
+            12
+          ],
+          "label": "보면대의 악보",
+          "action": {
+            "type": "examine",
+            "text": "손으로 그린 악보 — 콩나물 네 개뿐, 글자도 숫자도 없다. 높이만 서로 다르다."
+          }
+        },
+        {
+          "id": "room-classroom-h6",
+          "area": [
+            8,
+            54,
+            24,
+            11
+          ],
+          "label": "벽의 음악 괘도",
+          "action": {
+            "type": "examine",
+            "text": "음악 괘도의 한 줄 — \"맨 아랫줄이 도(do)다.\" 그 아래, 건반 그림에는 빨간 단추가 하나 칠해져 있다."
+          }
+        },
+        {
+          "id": "room-classroom-h7",
+          "area": [
+            38,
+            64,
+            22,
+            13
+          ],
+          "label": "풍금 뚜껑",
+          "action": {
+            "type": "puzzle",
+            "puzzleId": "th-staff"
+          },
+          "activeWhen": {
+            "type": "flag",
+            "flagId": "th-timetable-solved",
+            "value": true
+          }
+        },
+        {
+          "id": "room-classroom-h8",
+          "area": [
+            66,
+            64,
+            24,
+            11
+          ],
+          "label": "풍금 의자 밑 일기장",
+          "action": {
+            "type": "examine",
+            "text": "풍금 의자 밑에 숨겨 둔 일기장 — 갈피에 숫자 낙서가 적혀 있다. \"13:1 · 33:2 · 14:2\" — 시 프린트를 베껴 쓰다 남긴 글자 셈. 무슨 뜻인지는 아직 모르지만, 수첩에 옮겨 적는다."
+          },
+          "activeWhen": {
+            "type": "flag",
+            "flagId": "th-staff-solved",
+            "value": true
+          }
+        },
+        {
+          "id": "room-classroom-h9",
+          "area": [
+            8,
+            78,
+            24,
+            10
+          ],
+          "label": "몰수품 상자",
+          "action": {
+            "type": "examine",
+            "text": "교탁 아래 몰수품 상자 — 구슬, 딱지, 그리고 어른들 것 같은 은빛 라이터 하나. 거둬들인 것들은 돌아오지 않는다."
+          }
+        },
+        {
+          "id": "room-classroom-h10",
+          "area": [
+            40,
+            78,
+            20,
+            11
+          ],
+          "label": "교실 뒷문",
+          "action": {
+            "type": "move",
+            "roomId": "room-yard"
+          },
+          "activeWhen": {
+            "type": "flag",
+            "flagId": "th-staff-solved",
+            "value": true
+          }
+        }
+      ],
+      "nav": {},
+      "entryDialog": "dlg-room-classroom"
+    },
+    {
+      "id": "room-yard",
+      "name": "운동장 — 한낮",
+      "background": "/rooms/bg-yard.png",
+      "hotspots": [
+        {
+          "id": "room-yard-h1",
+          "area": [
+            10,
+            12,
+            26,
+            13
+          ],
+          "label": "도르래의 쪽지",
+          "action": {
+            "type": "examine",
+            "text": "도르래에 묶인 물당번 쪽지 — \"우물에 가까운 차례대로 길어 올린다.\""
+          }
+        },
+        {
+          "id": "room-yard-h2",
+          "area": [
+            60,
+            12,
+            28,
+            13
+          ],
+          "label": "주번 일지",
+          "action": {
+            "type": "examine",
+            "text": "주번 일지의 오늘 칸 — \"신발 정리를 다시 하랬다. 큰 것부터라고 했는데, 또 잊었다.\""
+          }
+        },
+        {
+          "id": "room-yard-h3",
+          "area": [
+            10,
+            36,
+            32,
+            14
+          ],
+          "label": "양동이 줄",
+          "action": {
+            "type": "examine",
+            "text": "양동이 네 개가 우물에서 띄엄띄엄 줄을 섰다 — 표찰에 번호가 하나씩, 발치 땅에는 걸음수가 새겨져 있다. 세 걸음, 일곱 걸음, 열 걸음, 열두 걸음 — 전부 다르다."
+          }
+        },
+        {
+          "id": "room-yard-h4",
+          "area": [
+            52,
+            38,
+            20,
+            13
+          ],
+          "label": "물당번 자물쇠",
+          "action": {
+            "type": "puzzle",
+            "puzzleId": "th-queue"
+          }
+        },
+        {
+          "id": "room-yard-h5",
+          "area": [
+            10,
+            56,
+            30,
+            13
+          ],
+          "label": "신발장의 고무신",
+          "action": {
+            "type": "examine",
+            "text": "검정 고무신 네 켤레 — 발등에 문수가 한 줄씩(9문 · 9문 반 · 10문 · 10문 반), 안창에는 페인트로 글자가 한 자씩 적혀 있다."
+          }
+        },
+        {
+          "id": "room-yard-h6",
+          "area": [
+            52,
+            64,
+            22,
+            13
+          ],
+          "label": "신발장 자물쇠",
+          "action": {
+            "type": "puzzle",
+            "puzzleId": "th-shoes"
+          },
+          "activeWhen": {
+            "type": "flag",
+            "flagId": "th-queue-solved",
+            "value": true
+          }
+        },
+        {
+          "id": "room-yard-h7",
+          "area": [
+            30,
+            79,
+            24,
+            10
+          ],
+          "label": "본관 현관문",
+          "action": {
+            "type": "move",
+            "roomId": "room-hallway"
+          },
+          "activeWhen": {
+            "type": "flag",
+            "flagId": "th-shoes-solved",
+            "value": true
+          }
+        }
+      ],
+      "nav": {
+        "back": "room-classroom"
+      },
+      "entryDialog": "dlg-room-yard"
+    },
+    {
+      "id": "room-hallway",
+      "name": "교무실 앞 복도 — 저녁",
+      "background": "/rooms/bg-hallway.png",
+      "hotspots": [
+        {
+          "id": "room-hallway-h1",
+          "area": [
+            8,
+            11,
+            26,
+            13
+          ],
+          "label": "석차 일람표",
+          "action": {
+            "type": "examine",
+            "text": "교무실 문에 붙은 석차 일람표 — 一등 엄석대 · 二등 김순길 · 三등 이만복 · 四등 박정구. 맨 윗줄의 이름은 언제나 같다."
+          }
+        },
+        {
+          "id": "room-hallway-h2",
+          "area": [
+            62,
+            11,
+            28,
+            13
+          ],
+          "label": "도장 보관함",
+          "action": {
+            "type": "examine",
+            "text": "도장 보관함 — 홈이 네 개, 첫째부터 넷째까지 차례가 새겨져 있다. 홈마다 어느 도장이 꽂혀 있었는지, 흠집 방위가 표시돼 있다: 왼 · 위 · 오른 · 아래."
+          }
+        },
+        {
+          "id": "room-hallway-h3",
+          "area": [
+            8,
+            35,
+            28,
+            13
+          ],
+          "label": "결재 서류",
+          "action": {
+            "type": "examine",
+            "text": "결재 서류 한 장 — 결재란 네 칸에 붉은 인영이 하나씩, 칸 옆에 부수(部數) 숫자가 적혀 있다. 인영마다 가장자리 한쪽이 이 빠져 있다."
+          }
+        },
+        {
+          "id": "room-hallway-h4",
+          "area": [
+            44,
+            35,
+            22,
+            13
+          ],
+          "label": "필통의 도장 네 개",
+          "action": {
+            "type": "examine",
+            "text": "나무 도장 네 개 — 손잡이의 이름은 닳아 안 보이고, 인면 가장자리의 흠집만 또렷하다. 위가 빠진 것, 아래가 빠진 것, 왼쪽, 오른쪽."
+          }
+        },
+        {
+          "id": "room-hallway-h5",
+          "area": [
+            70,
+            38,
+            20,
+            13
+          ],
+          "label": "서류함 자물쇠",
+          "action": {
+            "type": "puzzle",
+            "puzzleId": "th-seal"
+          }
+        },
+        {
+          "id": "room-hallway-h6",
+          "area": [
+            8,
+            57,
+            32,
+            13
+          ],
+          "label": "채점 답안지 넉 장",
+          "action": {
+            "type": "examine",
+            "text": "복도에 흩어진 채점 답안지 — 이만복 · 엄석대 · 박정구 · 김순길. 문항 아홉에 붉은 ○가 가득한데, 장마다 ×가 꼭 하나씩이다."
+          }
+        },
+        {
+          "id": "room-hallway-h7",
+          "area": [
+            52,
+            65,
+            22,
+            13
+          ],
+          "label": "서류 가방 자물쇠",
+          "action": {
+            "type": "puzzle",
+            "puzzleId": "th-miss"
+          },
+          "activeWhen": {
+            "type": "flag",
+            "flagId": "th-seal-solved",
+            "value": true
+          }
+        },
+        {
+          "id": "room-hallway-h8",
+          "area": [
+            30,
+            79,
+            24,
+            10
+          ],
+          "label": "6학년 교실 문",
+          "action": {
+            "type": "move",
+            "roomId": "room-election"
+          },
+          "activeWhen": {
+            "type": "flag",
+            "flagId": "th-miss-solved",
+            "value": true
+          }
+        }
+      ],
+      "nav": {
+        "back": "room-yard"
+      },
+      "entryDialog": "dlg-room-hallway",
+      "entryEffect": "flicker"
+    },
+    {
+      "id": "room-election",
+      "name": "선거날의 교실 — 새 봄",
+      "background": "/rooms/bg-election.png",
+      "hotspots": [
+        {
+          "id": "room-election-h1",
+          "area": [
+            8,
+            10,
+            30,
+            14
+          ],
+          "label": "개표 칠판",
+          "action": {
+            "type": "examine",
+            "text": "개표판 — 네 칸에 이름과 正자 묶음들, 칸마다 끝에 획이 덜 찬 글자가 하나씩 남았다. 글씨끼리 모서리가 겹쳤는데, 덧쓴 쪽이 위다. 아래 깔린 획은 겹친 자리에서 끊겨 있다."
+          }
+        },
+        {
+          "id": "room-election-h2",
+          "area": [
+            62,
+            10,
+            28,
+            12
+          ],
+          "label": "개표 규칙 두 줄",
+          "action": {
+            "type": "examine",
+            "text": "칠판 구석의 분필 글씨 — \"나중에 낸 표가 위에 쌓인다.\" 그리고 \"찢긴 표는 세지 않는다.\" 그 옆에 작게, \"正 한 글자 = 다섯 표.\""
+          }
+        },
+        {
+          "id": "room-election-h3",
+          "area": [
+            10,
+            38,
+            30,
+            14
+          ],
+          "label": "기표 연습지 더미",
+          "action": {
+            "type": "examine",
+            "text": "연습지 다섯 장이 모서리가 어긋나게 포개졌다 — 장마다 등사된 글자 한 자와 작대기 기호. 맨 위 한 장은 반으로 찢겨 있다. 들춰 보면 아래 장들이 차례로 보인다."
+          }
+        },
+        {
+          "id": "room-election-h4",
+          "area": [
+            52,
+            40,
+            20,
+            13
+          ],
+          "label": "참관 책상 서랍",
+          "action": {
+            "type": "puzzle",
+            "puzzleId": "th-stack"
+          }
+        },
+        {
+          "id": "room-election-h5",
+          "area": [
+            26,
+            64,
+            22,
+            13
+          ],
+          "label": "교탁 자물쇠",
+          "action": {
+            "type": "puzzle",
+            "puzzleId": "th-tally"
+          },
+          "activeWhen": {
+            "type": "flag",
+            "flagId": "th-stack-solved",
+            "value": true
+          }
+        },
+        {
+          "id": "room-election-h6",
+          "area": [
+            56,
+            78,
+            24,
+            11
+          ],
+          "label": "교실 앞문",
+          "action": {
+            "type": "move",
+            "roomId": "room-night"
+          },
+          "activeWhen": {
+            "type": "flag",
+            "flagId": "th-tally-solved",
+            "value": true
+          }
+        }
+      ],
+      "nav": {
+        "back": "room-hallway"
+      },
+      "entryDialog": "dlg-room-election"
+    },
+    {
+      "id": "room-night",
+      "name": "그 밤의 교실",
+      "background": "/rooms/bg-night.png",
+      "hotspots": [
+        {
+          "id": "room-night-h1",
+          "area": [
+            8,
+            9,
+            28,
+            12
+          ],
+          "label": "칠판의 글씨",
+          "action": {
+            "type": "examine",
+            "text": "분필 글씨가 달빛에 희미하다 — \"엄석대를 다시 급장으로. 모두 찬성이지?\" 그 아래, 아무도 들지 않은 손들의 침묵이 그대로 멎어 있다."
+          }
+        },
+        {
+          "id": "room-night-h2",
+          "area": [
+            44,
+            9,
+            22,
+            12
+          ],
+          "label": "게시판의 상장",
+          "action": {
+            "type": "examine",
+            "text": "게시판의 상장 — \"우등 一등\". 학기마다 한 장씩, 같은 이름. 수여자의 단정한 붓글씨다."
+          }
+        },
+        {
+          "id": "room-night-h3",
+          "area": [
+            70,
+            9,
+            22,
+            12
+          ],
+          "label": "학급일지",
+          "action": {
+            "type": "examine",
+            "text": "학급일지 — 급장이 손수 쓴 글씨가 빼곡하다. 'ㅅ' 첫 획을 길게 빼는 버릇이 한눈에 보인다. 이것이 그 애의 진짜 글씨다."
+          }
+        },
+        {
+          "id": "room-night-h4",
+          "area": [
+            8,
+            30,
+            28,
+            12
+          ],
+          "label": "깨진 유리창과 라이터",
+          "action": {
+            "type": "examine",
+            "text": "돌이 뚫고 들어온 유리창 — 마룻바닥의 돌에 은빛 라이터가 끈으로 묶여 있다. 몰수품 상자에서 본 그것이다. 불을 켜자, 종이 위의 자국들이 도드라진다."
+          }
+        },
+        {
+          "id": "room-night-h5",
+          "area": [
+            42,
+            34,
+            30,
+            14
+          ],
+          "label": "답안지 여덟 장",
+          "action": {
+            "type": "examine",
+            "text": "교탁 위 답안지 여덟 장 — 이름 칸이 전부 「엄석대」다. 라이터 불빛에 비추니 일곱 장은 이름 밑에 거뭇한 지우개 자국이 있고, 획 버릇이 다른 장도 보인다. 점수 칸은 잉크 얼룩에 가려 보이지 않는다."
+          }
+        },
+        {
+          "id": "room-night-h6",
+          "area": [
+            10,
+            56,
+            22,
+            13
+          ],
+          "label": "검인 다이얼",
+          "action": {
+            "type": "puzzle",
+            "puzzleId": "th-exam"
+          }
+        },
+        {
+          "id": "room-night-h7",
+          "area": [
+            44,
+            56,
+            24,
+            12
+          ],
+          "label": "두고 간 일기장",
+          "action": {
+            "type": "examine",
+            "text": "책상 서랍 속, 두고 간 일기장 — 갈피의 숫자 낙서가 그대로다. \"13:1 · 33:2 · 14:2\". 앞 수는 어절의 번지, 뒤 수는 그 어절의 글자."
+          }
+        },
+        {
+          "id": "room-night-h8",
+          "area": [
+            36,
+            76,
+            26,
+            12
+          ],
+          "label": "등사 시 프린트",
+          "action": {
+            "type": "puzzle",
+            "puzzleId": "twistedhero-cipher"
+          },
+          "activeWhen": {
+            "type": "flag",
+            "flagId": "th-exam-solved",
+            "value": true
+          }
+        }
+      ],
+      "nav": {},
+      "entryDialog": "dlg-room-night",
+      "entryEffect": "blackout"
+    }
+  ],
+  "puzzles": [
+    {
+      "type": "keypad",
+      "id": "th-timetable",
+      "title": "책상 서랍",
+      "answer": "3526",
+      "digits": 4,
+      "reward": {
+        "type": "flag",
+        "flagId": "th-timetable-solved",
+        "flagValue": true,
+        "text": "서랍의 노끈 매듭은 자물쇠다 — 알림장 네 줄이 차례를 안다."
+      },
+      "solvedFlag": "th-timetable-solved"
+    },
+    {
+      "type": "keypad",
+      "id": "th-staff",
+      "title": "풍금 뚜껑",
+      "answer": "5273",
+      "digits": 4,
+      "reward": {
+        "type": "flag",
+        "flagId": "th-staff-solved",
+        "flagValue": true,
+        "text": "풍금 뚜껑이 잠겼다. 보면대의 손글씨 악보에는 글자가 없다 — 콩나물 네 개뿐."
+      },
+      "solvedFlag": "th-staff-solved"
+    },
+    {
+      "type": "keypad",
+      "id": "th-queue",
+      "title": "물당번 자물쇠",
+      "answer": "6084",
+      "digits": 4,
+      "reward": {
+        "type": "flag",
+        "flagId": "th-queue-solved",
+        "flagValue": true,
+        "text": "도르래 쪽지 — 우물에 가까운 차례대로 길어 올린다."
+      },
+      "solvedFlag": "th-queue-solved"
+    },
+    {
+      "type": "text-input",
+      "id": "th-shoes",
+      "title": "신발장 자물쇠",
+      "prompt": "주번은 큰 것부터 정리한다 — 문수 큰 신부터 안창의 글자를 한 자씩 모아라",
+      "answer": "급장선거",
+      "placeholder": "4글자",
+      "isKorean": true,
+      "reward": {
+        "type": "flag",
+        "flagId": "th-shoes-solved",
+        "flagValue": true,
+        "text": "신발장 자물쇠 — 안창의 글자는 문수가 차례를 안다."
+      },
+      "solvedFlag": "th-shoes-solved"
+    },
+    {
+      "type": "keypad",
+      "id": "th-seal",
+      "title": "서류함 자물쇠",
+      "answer": "5792",
+      "digits": 4,
+      "reward": {
+        "type": "flag",
+        "flagId": "th-seal-solved",
+        "flagValue": true,
+        "text": "서류함 자물쇠 — 도장의 이름은 닳았지만 흠집은 남았다."
+      },
+      "solvedFlag": "th-seal-solved"
+    },
+    {
+      "type": "keypad",
+      "id": "th-miss",
+      "title": "서류 가방 자물쇠",
+      "answer": "8351",
+      "digits": 4,
+      "reward": {
+        "type": "flag",
+        "flagId": "th-miss-solved",
+        "flagValue": true,
+        "text": "채점 답안지 넉 장 — 장마다 ×가 꼭 하나씩이다."
+      },
+      "solvedFlag": "th-miss-solved"
+    },
+    {
+      "type": "text-input",
+      "id": "th-stack",
+      "title": "참관 책상 서랍",
+      "prompt": "나중에 낸 표가 위에 쌓인다 — 찢긴 표는 빼고, 맨 아래 장부터 글자를 모아라",
+      "answer": "만장일치",
+      "placeholder": "4글자",
+      "isKorean": true,
+      "reward": {
+        "type": "flag",
+        "flagId": "th-stack-solved",
+        "flagValue": true,
+        "text": "연습지 더미 — 나중에 낸 표가 위에 쌓인다. 찢긴 표는 세지 않는다."
+      },
+      "solvedFlag": "th-stack-solved"
+    },
+    {
+      "type": "keypad",
+      "id": "th-tally",
+      "title": "교탁 자물쇠",
+      "answer": "4231",
+      "digits": 4,
+      "reward": {
+        "type": "flag",
+        "flagId": "th-tally-solved",
+        "flagValue": true,
+        "text": "개표 칠판 — 표를 다 세지 마라. 끝나지 않은 글자가 수를 말한다."
+      },
+      "solvedFlag": "th-tally-solved"
+    },
+    {
+      "type": "keypad",
+      "id": "th-exam",
+      "title": "검인 다이얼",
+      "answer": "7281",
+      "digits": 4,
+      "reward": {
+        "type": "flag",
+        "flagId": "th-exam-solved",
+        "flagValue": true,
+        "text": "여덟 장 가운데 지우지 않은, 그리고 그 버릇 그대로인 한 장을 찾아라.",
+        "effect": "shake"
+      },
+      "solvedFlag": "th-exam-solved"
+    },
+    {
+      "type": "text-input",
+      "id": "twistedhero-cipher",
+      "title": "암호 노트",
+      "prompt": "책상 위, 새 담임이 등사기로 밀어 나눠 준 시 프린트 한 장. 일기장 갈피의 숫자 낙서가 어절과 글자를 가리킨다. 칠판에는 분필 글씨 — \"엄석대를 다시 급장으로. 모두 찬성이지?\" 이제, 그날 삼킨 대답을 쓴다.",
+      "answer": "아니다",
+      "placeholder": "3글자",
+      "isKorean": true,
+      "solvedFlag": "cipher-solved",
+      "reward": {
+        "type": "flag",
+        "flagId": "cipher-solved",
+        "flagValue": true,
+        "text": "마지막 자물쇠가 묻는 것은 답이 아니라 대답이다 — 만장일치의 교실에서 끝내 입 밖에 내지 못한 세 글자. 이름을 버린 자(esc_4)와 이름을 되찾은 자(esc_6), 부르지 못한 호칭(esc_7)을 지나 — 이번에는 삼킨 대답이 돌아온다. 그날 하지 못한 말, 아니다 — 를, 네 손으로 쓴다.",
+        "effect": "blackout"
+      }
+    }
+  ],
+  "items": [],
+  "dialogs": [
+    {
+      "id": "dlg-room-classroom",
+      "lines": [
+        {
+          "text": "아침 햇살이 분필 가루를 비춘다. 전학 첫날 — 내 책상 서랍만 노끈으로 묶여 있다. 누구의 짓인지 묻는 눈에, 아이들은 눈을 내리깐다. 이 교실에는 이 교실의 법이 있다."
+        }
+      ]
+    },
+    {
+      "id": "dlg-room-yard",
+      "lines": [
+        {
+          "text": "한낮의 운동장. 우물가에 양동이들이 줄을 섰다 — 물 한 동이에도 차례가 있다. 현관 신발장의 검정 고무신은 늘 큰 신부터 정리된다."
+        }
+      ]
+    },
+    {
+      "id": "dlg-room-hallway",
+      "lines": [
+        {
+          "text": "저녁의 교무실 앞 복도. 백열등이 깜빡인다. 문틈으로 결재 서류와 채점 중인 답안지가 보인다 — 석차가 태어나는 곳. 맨 윗줄의 이름은 언제나 같다."
+        }
+      ]
+    },
+    {
+      "id": "dlg-room-election",
+      "lines": [
+        {
+          "text": "겨울이 갔다. 새 학년 — 새 담임이 왔다. 선거날의 교실, 참관 책상에 기표 연습지가 쌓였고 칠판의 개표판에는 正자가 줄을 잇는다. 결과를 모르는 사람은 교실에 없다."
+        }
+      ]
+    },
+    {
+      "id": "dlg-room-night",
+      "lines": [
+        {
+          "text": "그 밤, 누군가 어둠 속에서 유리창에 돌을 던졌다. 달빛이 깨진 자리로 쏟아져 들어온다. 교탁 위에 답안지 여덟 장 — 이름 칸이 전부 같은 이름이다."
+        }
+      ]
+    }
+  ],
+  "hints": [
+    {
+      "forPuzzle": "th-timetable",
+      "steps": [
+        "알림장의 준비물엔 과목이 숨어 있다.",
+        "칠판 구석 내일 시간표에서 그 과목의 교시를, 알림장 줄 차례로 읽어라."
+      ]
+    },
+    {
+      "forPuzzle": "th-staff",
+      "steps": [
+        "맨 아랫줄이 도다 — 빨간 단추가 그 건반이다.",
+        "음표 높이만큼 빨간 단추에서 오른쪽으로 세어, 그 걸음 수를 차례로."
+      ]
+    },
+    {
+      "forPuzzle": "th-queue",
+      "steps": [
+        "차례는 줄 선 자리다.",
+        "발치의 걸음수가 가까운 양동이부터, 표찰 번호를 차례로."
+      ]
+    },
+    {
+      "forPuzzle": "th-shoes",
+      "steps": [
+        "주번은 큰 것부터 정리하라고 했다.",
+        "문수 큰 신부터, 안창의 글자를 한 자씩."
+      ]
+    },
+    {
+      "forPuzzle": "th-seal",
+      "steps": [
+        "이름은 닳아도 흠집은 남는다.",
+        "흠집 방위로 도장과 인영을 짝짓고, 보관함 홈 차례로 그 숫자를."
+      ]
+    },
+    {
+      "forPuzzle": "th-miss",
+      "steps": [
+        "×가 찍힌 자리가 수다.",
+        "석차 일람표의 차례대로, 그 이름의 답안지에서."
+      ]
+    },
+    {
+      "forPuzzle": "th-stack",
+      "steps": [
+        "나중에 낸 표가 위에 쌓인다 — 찢긴 표는 세지 않는다.",
+        "맨 아래 장부터, 글자를 한 자씩."
+      ]
+    },
+    {
+      "forPuzzle": "th-tally",
+      "steps": [
+        "표를 다 세지 마라 — 끝의 미완성 글자를 보라.",
+        "겹침에서 아래 깔린 글씨가 먼저다 — 그 차례로 획수를."
+      ]
+    },
+    {
+      "forPuzzle": "th-exam",
+      "steps": [
+        "일곱 장은 이름을 지웠고, 다섯 장은 버릇이 다르다.",
+        "학급일지의 'ㅅ' 버릇 — 자국도 없고 버릇도 같은 한 장의 검인 번호를."
+      ]
+    }
+  ],
+  "clearCondition": {
+    "type": "and",
+    "conditions": [
+      {
+        "type": "flag",
+        "flagId": "th-timetable-solved",
+        "value": true
+      },
+      {
+        "type": "flag",
+        "flagId": "th-staff-solved",
+        "value": true
+      },
+      {
+        "type": "flag",
+        "flagId": "th-queue-solved",
+        "value": true
+      },
+      {
+        "type": "flag",
+        "flagId": "th-shoes-solved",
+        "value": true
+      },
+      {
+        "type": "flag",
+        "flagId": "th-seal-solved",
+        "value": true
+      },
+      {
+        "type": "flag",
+        "flagId": "th-miss-solved",
+        "value": true
+      },
+      {
+        "type": "flag",
+        "flagId": "th-stack-solved",
+        "value": true
+      },
+      {
+        "type": "flag",
+        "flagId": "th-tally-solved",
+        "value": true
+      },
+      {
+        "type": "flag",
+        "flagId": "th-exam-solved",
+        "value": true
+      },
+      {
+        "type": "flag",
+        "flagId": "cipher-solved",
+        "value": true
+      }
+    ]
+  },
+  "clearMessage": "마지막 자물쇠가 묻는 것은 답이 아니라 대답이다 — 만장일치의 교실에서 끝내 입 밖에 내지 못한 세 글자. 이름을 버린 자(esc_4)와 이름을 되찾은 자(esc_6), 부르지 못한 호칭(esc_7)을 지나 — 이번에는 삼킨 대답이 돌아온다. 그날 하지 못한 말, 아니다 — 를, 네 손으로 쓴다."
+}

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- esc_9 「만장일치」 — 칠판 위 미완성 正 (다섯째 획이 비어 있다) -->
+  <rect x="6" y="10" width="52" height="44" rx="4" fill="#8a6a48"/>
+  <rect x="10" y="14" width="44" height="36" rx="2" fill="#2e4e3e"/>
+  <g stroke="#efe6d0" stroke-width="4" stroke-linecap="round">
+    <path d="M20 24 h24"/>
+    <path d="M32 24 v18"/>
+    <path d="M32 33 h11"/>
+    <path d="M21 28 v14"/>
+  </g>
+  <rect x="24" y="51" width="14" height="3" rx="1.5" fill="#efe6d0" transform="rotate(-4 31 52.5)"/>
+</svg>
