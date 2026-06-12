@@ -634,67 +634,70 @@ function Daybook({ clue: _clue }: { clue: TokensClue }) {
   )
 }
 
-/** 답안지 여덟 장: 상단 고정 띠(학급일지 필적 기준 ㅅ) + 2×4 그리드(이름 칸 크롭). */
+/** 답안지 여덟 장: 상단 고정 띠(학급일지 필적 기준 ㅅ) + 2×4 그리드. 각 장에 번호·자국·필적 +
+ *  관측 라벨("자국 없음/지운 자국", "버릇 같음/버릇 다름")을 명시 — 자물쇠는 번호만이라 여기서 가린다. */
 function Exams({ clue }: { clue: TokensClue }) {
+  const ROW = 56
+  const vbH = 42 + 4 * ROW + 4
   return (
-    <Scene vb="0 0 120 240">
-      <rect x="0" y="0" width="120" height="240" rx="3" fill="#e8e0d0" />
+    <Scene vb={`0 0 120 ${vbH}`}>
+      <rect x="0" y="0" width="120" height={vbH} rx="3" fill="#e8e0d0" />
       {/* 상단 고정 띠 — 학급일지 ㅅ 필적 기준 */}
       <rect x="0" y="0" width="120" height="36" rx="3" fill={BOARD} />
-      <text x="12" y="12" fontSize="7" fill={HANJI} opacity="0.7">필적 기준 — 학급일지</text>
+      <text x="10" y="13" fontSize="7.5" fill={HANJI} opacity="0.8">진짜 = 자국 없고 버릇 같은 것</text>
       {/* 기준 ㅅ — 긴 첫 획 */}
       <g stroke={HANJI} strokeWidth="3" strokeLinecap="round" fill="none">
-        <line x1="38" y1="34" x2="58" y2="14" />
-        <line x1="58" y1="14" x2="72" y2="34" />
+        <line x1="88" y1="32" x2="103" y2="14" />
+        <line x1="103" y1="14" x2="114" y2="32" />
       </g>
-      <text x="57" y="34" textAnchor="middle" fontSize="6" fill={HANJI} opacity="0.6">긴 첫 획 기준</text>
-      {/* 2×4 그리드 — 관측축은 글이 아니라 그림이다(설계서 v2 L9):
-          ① 이름 밑 지우개 번짐(있음/없음) ② 확대경 속 'ㅅ' 첫 획(길다/짧다 — 라이터 불빛 확대). */}
+      <text x="100" y="9" textAnchor="middle" fontSize="5.5" fill={HANJI} opacity="0.7">기준 ㅅ</text>
       {clue.tokens.map((t, i) => {
         const col = i % 2, row = Math.floor(i / 2)
-        const x = 6 + col * 57, y = 42 + row * 48
+        const x = 6 + col * 57, y = 42 + row * ROW
         const hasErase = (t.tag ?? '').includes('지운 자국')
         const sameHabit = (t.tag ?? '').includes('버릇 같음')
-        // 확대경 중심
-        const mx = x + 42, my = y + 33
+        const real = !hasErase && sameHabit
+        const mx = x + 42, my = y + 32
         return (
           <g key={i}>
-            {/* 답안지 이름 칸 크롭 */}
-            <rect x={x} y={y} width="52" height="40" rx="2" fill={HANJI} stroke="#c4b890" strokeWidth="0.8" />
-            {/* 이름 칸 경계 */}
-            <rect x={x + 2} y={y + 2} width="48" height="24" rx="1.5" fill={HANJI} stroke="#d0c0a0" strokeWidth="0.6" />
+            {/* 답안지 이름 칸 크롭 — 진짜는 한지가 살짝 밝게 */}
+            <rect x={x} y={y} width="52" height="40" rx="2" fill={real ? '#f4eedd' : HANJI} stroke="#c4b890" strokeWidth="0.8" />
+            <rect x={x + 2} y={y + 2} width="48" height="22" rx="1.5" fill="#f6f0de" stroke="#d0c0a0" strokeWidth="0.6" />
             {/* 지운 자국 — 이름 밑 거뭇한 번짐(관측축 ①) */}
             {hasErase && (
               <>
-                <rect x={x + 5} y={y + 15} width="42" height="9" rx="2" fill="#8a7860" opacity="0.4" />
-                <rect x={x + 9} y={y + 17} width="30" height="5" rx="2" fill="#6a5a48" opacity="0.35" />
+                <rect x={x + 5} y={y + 14} width="42" height="9" rx="2" fill="#8a7860" opacity="0.5" />
+                <rect x={x + 9} y={y + 16} width="30" height="5" rx="2" fill="#5a4a38" opacity="0.45" />
               </>
             )}
             {/* 이름 「엄석대」 */}
-            <text x={x + 24} y={y + 20} textAnchor="middle" fontSize="10.5" fontFamily="serif" fontWeight="700" fill={INK}>엄석대</text>
-            {/* 점수 칸 — 잉크 얼룩으로 가림(해정 후 공개 — 비표시 계약) */}
-            <rect x={x + 2} y={y + 27} width="32" height="10" rx="1" fill="#6a5a40" opacity="0.6" />
-            <ellipse cx={x + 14} cy={y + 32} rx="8" ry="4" fill="#4a3a28" opacity="0.55" />
-            {/* 확대경 — 라이터 불빛에 비춘 'ㅅ' 첫 획(관측축 ②): 길면 학급일지 버릇과 같다 */}
+            <text x={x + 24} y={y + 18} textAnchor="middle" fontSize="10.5" fontFamily="serif" fontWeight="700" fill={INK}>엄석대</text>
+            {/* 점수 칸 — 잉크 얼룩으로 가림 */}
+            <rect x={x + 2} y={y + 26} width="30" height="10" rx="1" fill="#6a5a40" opacity="0.6" />
+            <ellipse cx={x + 13} cy={y + 31} rx="8" ry="4" fill="#4a3a28" opacity="0.55" />
+            {/* 확대경 — 'ㅅ' 첫 획(관측축 ②) */}
             <circle cx={mx} cy={my} r="8.5" fill="#fbf4df" stroke="#9a8870" strokeWidth="1" />
             <g stroke={INK} strokeWidth="1.9" strokeLinecap="round" fill="none">
               {sameHabit ? (
                 <>
-                  {/* 긴 첫 획 — 왼 삐침이 원을 가로지를 만큼 길다 */}
                   <line x1={mx - 6.5} y1={my + 5.5} x2={mx + 2.5} y2={my - 5.5} />
                   <line x1={mx + 2.5} y1={my - 5.5} x2={mx + 6} y2={my + 4} />
                 </>
               ) : (
                 <>
-                  {/* 보통 ㅅ — 짧고 균형 잡힘 */}
                   <line x1={mx - 3} y1={my + 4} x2={mx + 0.5} y2={my - 4.5} />
                   <line x1={mx + 0.5} y1={my - 4.5} x2={mx + 4} y2={my + 4} />
                 </>
               )}
             </g>
-            {/* 답안지 번호(1~8) — 토글 자물쇠가 누르는 번호. 좌상 모서리에 또렷이 */}
-            <circle cx={x + 7} cy={y + 7} r="6" fill={BOARD} stroke={HANJI} strokeWidth="0.8" />
-            <text x={x + 7} y={y + 9.5} textAnchor="middle" fontSize="8" fontWeight="700" fill={HANJI}>{t.text}</text>
+            {/* 번호(1~8) — 자물쇠가 누르는 번호. 좌상 또렷이 */}
+            <circle cx={x + 7} cy={y + 7} r="6.5" fill={real ? '#2e6e4e' : BOARD} stroke={HANJI} strokeWidth="0.9" />
+            <text x={x + 7} y={y + 10} textAnchor="middle" fontSize="9" fontWeight="700" fill={HANJI}>{t.text}</text>
+            {/* 관측 라벨 — 자국·필적을 글로도 명시(자물쇠 번호만이라 여기서 가린다) */}
+            <text x={x + 26} y={y + 47} textAnchor="middle" fontSize="6.5"
+              fill={hasErase ? '#9a3020' : '#3a7050'}>{hasErase ? '지운 자국 있음' : '자국 없음'}</text>
+            <text x={x + 26} y={y + 54} textAnchor="middle" fontSize="6.5"
+              fill={sameHabit ? '#3a7050' : '#9a3020'}>{sameHabit ? '버릇 같음' : '버릇 다름'}</text>
           </g>
         )
       })}

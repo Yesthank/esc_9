@@ -113,9 +113,9 @@ try {
   }
   const solveToggle = async (answer) => {
     // L9 토글 — 정답 답안지 카드(부분집합)를 순서 무관 클릭 → 제출.
-    await page.waitForSelector('.toggle__cards', { timeout: 8000 })
+    await page.waitForSelector('.toggle__grid', { timeout: 8000 })
     for (const ch of answer) {
-      const btn = await page.$(`.toggle__cards button[data-toggle="${ch}"]`)
+      const btn = await page.$(`.toggle__grid button[data-toggle="${ch}"]`)
       if (!btn) { console.error(`  ✗ toggle card missing: ${ch}`); failed = true; return }
       await btn.click()
       await sleep(70)

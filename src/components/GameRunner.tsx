@@ -183,10 +183,14 @@ export function GameRunner({ config, clueMap }: { config: GameConfig; clueMap: C
           const m = state.modal
           const pz = config.puzzles.find((p) => p.id === m.puzzleId)
           if (!pz) return null
+          // 사이퍼 자물쇠: 시 전문(book-cipher clue)을 모달에 함께 띄운다(라벨→clue 키).
+          const clueKey = m.title ? CLUE_KEY_BY_LABEL[m.title] : undefined
+          const clue = clueKey ? clueMap[clueKey] : undefined
           return (
             <PuzzleModal
               puzzle={pz}
               title={m.title}
+              clue={clue}
               hints={hintsFor(pz.id)}
               revealed={state.hintsRevealed[pz.id] ?? 0}
               onReveal={() => actions.revealHint(pz.id)}

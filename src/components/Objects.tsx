@@ -104,6 +104,7 @@ export const CLUE_KEY_BY_LABEL: Record<string, string> = {
   '깨진 유리창과 라이터': 'th-glass',
   '답안지 여덟 장':       'th-exams',
   '두고 간 일기장':       'th-diary',
+  '칠판의 시':            'twistedhero-cipher',
 }
 
 type P = { open?: boolean; solved?: boolean }

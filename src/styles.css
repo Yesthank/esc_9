@@ -293,17 +293,18 @@ body {
   color: var(--bone); background: var(--abyss); border: 1.5px solid var(--brass-dim); border-radius: 7px;
 }
 
-/* 북 사이퍼 — 어머니의 책 */
+/* 북 사이퍼 — 칠판의 시(크고 밝게 — 한지 위 판서) */
 .clue--cipher .cipher__excerpt {
-  margin: 0; padding: 13px 14px; border-left: 3px solid var(--brass);
-  background: rgba(201,118,43,.06); border-radius: 0 8px 8px 0;
-  font-family: var(--serif-ko); font-size: 15px; line-height: 2.05; color: var(--bone); text-align: left;
+  margin: 0; padding: 16px 16px; border-left: 4px solid var(--brass);
+  background: #f3ecd8; border-radius: 0 8px 8px 0;
+  font-family: var(--serif-ko); font-size: 17.5px; line-height: 2.15; color: #20251c; text-align: center;
+  box-shadow: 0 3px 14px rgba(0,0,0,.35);
 }
-.cipher__word--mark { background: rgba(143,208,170,.18); border-radius: 3px; padding: 1px 2px; font-weight: 600; color: var(--glow); }
-.cipher__letter { position: relative; font-weight: 600; }
+.cipher__word--mark { background: rgba(46,78,62,.16); border-radius: 4px; padding: 1px 3px; font-weight: 700; color: #1e4733; }
+.cipher__letter { position: relative; font-weight: 800; color: #b5392b; }
 .cipher__letter::after {
-  content: ''; position: absolute; left: 50%; bottom: -3px; transform: translateX(-50%);
-  width: 3px; height: 3px; border-radius: 50%; background: rgba(239, 230, 208, 0.7);
+  content: ''; position: absolute; left: 50%; bottom: -4px; transform: translateX(-50%);
+  width: 5px; height: 5px; border-radius: 50%; background: #b5392b;
 }
 .cipher__ord {
   position: relative; top: -.7em; font-size: 9px; font-weight: 700;
@@ -382,30 +383,26 @@ body {
 .kslate__key:active { transform: translateY(1px); }
 .kslate__submit { width: 100%; border-radius: 10px; }
 
-/* ---------- 토글 자물쇠 (esc_9 L9 — 답안지 카드 4행 2열, 순서 무관) ---------- */
-.toggle { display: flex; flex-direction: column; gap: 14px; align-items: center; }
-.toggle__cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; width: 100%; }
-.toggle__card {
-  position: relative; padding: 0; border-radius: 8px; cursor: pointer; overflow: hidden;
-  background: transparent; border: 2px solid var(--brass-dim); transition: .15s;
-  line-height: 0;
+/* ---------- 토글 자물쇠 (esc_9 L9 — 번호 버튼 4행 2열, 순서 무관) ---------- */
+.toggle { display: flex; flex-direction: column; gap: 13px; align-items: center; }
+.toggle__lead { margin: 0; font-size: 13px; line-height: 1.7; color: var(--bone-dim); text-align: center; }
+.toggle__lead b { color: var(--bone); font-weight: 700; }
+.toggle__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; width: 100%; }
+.toggle__btn {
+  min-height: 50px; border-radius: 10px; cursor: pointer;
+  background: var(--hull-lt); color: var(--bone); border: 1.5px solid var(--brass-dim);
+  font-family: var(--serif-ko); font-size: 21px; font-weight: 700; transition: .15s;
+  position: relative; -webkit-tap-highlight-color: transparent;
 }
-.toggle__card:hover { border-color: var(--brass); }
-.toggle__card:active { transform: translateY(1px); }
-.toggle__cardsvg { width: 100%; height: auto; display: block; }
-.toggle__check {
-  position: absolute; right: 4px; bottom: 3px; font-size: 15px; line-height: 1;
-  color: var(--glow); opacity: 0; transform: scale(.6); transition: .15s;
-  text-shadow: 0 1px 3px rgba(0,0,0,.6);
+.toggle__btn:hover { border-color: var(--brass); }
+.toggle__btn:active { transform: translateY(1px); }
+.toggle__btn.on {
+  background: linear-gradient(180deg, var(--brass), var(--brass-dim));
+  color: #1a130a; border-color: var(--brass);
+  box-shadow: inset 0 2px 6px rgba(0,0,0,.4), 0 0 12px rgba(201,118,43,.4);
 }
-.toggle__card.on {
-  border-color: var(--brass);
-  box-shadow: inset 0 0 0 2px var(--brass), 0 0 12px rgba(201,118,43,.45);
-}
-.toggle__card.on .toggle__cardsvg { filter: brightness(1.06); }
-.toggle__card.on .toggle__check { opacity: 1; transform: scale(1); }
-.toggle__card.on::before {
-  content: ''; position: absolute; inset: 0; background: rgba(201,118,43,.16); pointer-events: none;
+.toggle__btn.on::after {
+  content: '✓'; position: absolute; right: 7px; top: 5px; font-size: 12px; color: #1a130a; opacity: .7;
 }
 .toggle__submit { width: 100%; border-radius: 10px; }
 
